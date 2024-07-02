@@ -11,6 +11,7 @@ import { Repository } from 'typeorm';
 import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Role } from 'src/types/types';
 
 @Injectable()
 export class UserService {
@@ -28,6 +29,8 @@ export class UserService {
 
     if (existUser) throw new BadRequestException('This email already exists!');
 
+    const role = createUserDto.role || Role.User;
+
     const user = await this.userRepository.save({
       email: createUserDto.email,
       password: await argon2.hash(createUserDto.password),
@@ -37,10 +40,12 @@ export class UserService {
       nickname: createUserDto.nickname,
       description: createUserDto.description,
       position: createUserDto.position,
+      role: role,
     });
 
     const token = this.jwtService.sign({
       email: createUserDto.email,
+      role: role,
     });
 
     return { user, token };

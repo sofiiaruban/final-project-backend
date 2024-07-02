@@ -15,7 +15,6 @@ export class AuthorGuard implements CanActivate {
     const { id } = request.params;
     const entity = await this.companiesService.findOne(id);
     const user = request.user;
-
     if (entity && user && entity.user.id === user.id) {
       return true;
     }

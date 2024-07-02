@@ -36,6 +36,9 @@ export class User {
   @Column()
   position: string;
 
+  @Column({ default: 'user' })
+  role?: string;
+
   @OneToMany(() => Company, (company) => company.user, { onDelete: 'CASCADE' })
   companies: Company[];
 
