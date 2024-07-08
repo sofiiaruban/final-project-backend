@@ -31,14 +31,6 @@ export class CompaniesController {
   create(@Body() createCompanyDto: CreateCompanyDto, @Req() req) {
     return this.companiesService.create(createCompanyDto, req.user.id);
   }
-
-  @Get('all')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.Admin)
-  findAll() {
-    return this.companiesService.findAll();
-  }
-
   @Get('pagination')
   @UseGuards(JwtAuthGuard)
   findAllWithPagination(
@@ -53,16 +45,22 @@ export class CompaniesController {
     );
   }
 
+  @Get('all')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  findAll() {
+    return this.companiesService.findAll();
+  }
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  findOne(@Param('id') id: string) {
+    return this.companiesService.findOne(+id);
+  }
+
   @Get()
   @UseGuards(JwtAuthGuard)
   findAllByUser(@Req() req) {
     return this.companiesService.findAllByUser(req.user.id);
-  }
-
-  @Get(':id')
-  @UseGuards(JwtAuthGuard, AuthorGuard)
-  findOne(@Param('id') id: string) {
-    return this.companiesService.findOne(+id);
   }
 
   @Patch(':id')
