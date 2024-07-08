@@ -29,7 +29,6 @@ export class RolesGuard implements CanActivate {
       role: Role.Admin,
     };
 
-    console.log('User role:', user.role);
     return requiredRoles.some((role) => user.role === role);
   }
 }
