@@ -17,6 +17,9 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { AuthorGuard } from 'src/guards/author.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/types/types';
 
 @Controller('companies')
 export class CompaniesController {
@@ -27,6 +30,13 @@ export class CompaniesController {
   @UsePipes(new ValidationPipe())
   create(@Body() createCompanyDto: CreateCompanyDto, @Req() req) {
     return this.companiesService.create(createCompanyDto, req.user.id);
+  }
+
+  @Get('all')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  findAll() {
+    return this.companiesService.findAll();
   }
 
   @Get('pagination')
@@ -45,8 +55,8 @@ export class CompaniesController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  findAll(@Req() req) {
-    return this.companiesService.findAll(req.user.id);
+  findAllByUser(@Req() req) {
+    return this.companiesService.findAllByUser(req.user.id);
   }
 
   @Get(':id')

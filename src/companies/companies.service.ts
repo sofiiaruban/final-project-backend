@@ -41,7 +41,11 @@ export class CompaniesService {
     return await this.companyRepository.save(newCompany);
   }
 
-  async findAll(id: number) {
+  async findAll() {
+    return await this.companyRepository.find();
+  }
+
+  async findAllByUser(id: number) {
     return await this.companyRepository.find({
       where: {
         user: { id },
